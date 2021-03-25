@@ -60,7 +60,7 @@ func NewDeadMansSwitch(message <-chan string, interval time.Duration, notifier f
 func (d *DeadmansSwitch) Run() error {
 	log.Println("starting dead mans switch")
 	d.ticker = time.NewTicker(d.interval)
-
+	failedEvaluatePayload.SetToCurrentTime()
 	skip := false
 
 	for {
@@ -78,8 +78,6 @@ func (d *DeadmansSwitch) Run() error {
 			if msg != "" {
 				failedEvaluatePayload.SetToCurrentTime()
 			} else {
-				// message is null, heatbeat success, just skip current check
-				failedEvaluatePayload.Set(0)
 				heatbeatSuccess.Inc()
 				skip = true
 			}
